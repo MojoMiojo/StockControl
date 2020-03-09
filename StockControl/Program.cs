@@ -30,7 +30,7 @@ namespace StockControl
 
                 Console.WriteLine("1 - Cadastrar Produto\t2 - Mostrar produtos cadastrados\n"
                              + "3 - Entrada de produtos\t4 - Saída de produtos\n"
-                             + "\n0 - Sair\n");
+                             + "5 - Visão de Lucros\t0 - Sair\n");
 
                 Console.Write("Escolha a opção desejada: ");
                 option = int.Parse(Console.ReadLine());
@@ -45,7 +45,6 @@ namespace StockControl
                     case 2:
                         Console.WriteLine("-Lista de Produtos Cadastros-\n");
                         pc.ShowProducts();
-                        Console.ReadLine();
                         break;
                     case 3:
                         Console.WriteLine("-Entrada de Estoque-\n");
@@ -54,6 +53,10 @@ namespace StockControl
                     case 4:
                         Console.WriteLine("-Saída de Estoque-\n");
                         pc.RemoveProduct();
+                        break;
+                    case 5:
+                        Console.WriteLine("-Visão de Lucros-\n");
+                        pc.ViewProfit();
                         break;
                     default:
                         break;
