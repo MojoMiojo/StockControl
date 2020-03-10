@@ -1,4 +1,6 @@
-﻿namespace StockControl.Model
+﻿using System.Globalization;
+
+namespace StockControl.Model
 {
     class Product
     {
@@ -23,7 +25,7 @@
         {
             return "|Nome:" +Name
                 + "| Quantidade: "+ Quantity
-                + "| Valor Unitário: R$" + Price.ToString("F2") + "|";
+                + "| Valor Unitário: R$" + SalePrice.ToString("F2") + "|";
         }
 
     }//end class

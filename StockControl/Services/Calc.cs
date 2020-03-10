@@ -1,4 +1,5 @@
 ﻿using StockControl.Model;
+using System.Globalization;
 
 namespace StockControl.Services
 {
@@ -17,7 +18,7 @@ namespace StockControl.Services
         public double Profit(Product P)
         {
             
-            System.Console.WriteLine($"Vendas: {P.Sell}+ <> Compras: {P.Buy}-");
+            System.Console.WriteLine("Vendas: " +P.Sell.ToString("F2")+" <> Compras: "+P.Buy.ToString("F2")+"-");
             return P.Sell - P.Buy;
         }
 

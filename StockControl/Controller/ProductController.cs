@@ -53,15 +53,17 @@ namespace StockControl.Controller
             if (list.Count == 0)
             {
                 Console.WriteLine("Não há produtos cadastrados.");
+                
             }
             else
             {
                 for (int i = 0; i < list.Count; i++)
                 {
-                    Console.WriteLine("|Id: " + (i + 1) + " " + list[i] + " Valor Total: R$" + _calc.ProductValue(list[i]).ToString("F2") + "|");
+                    Console.WriteLine("|Id: " + (i + 1) + " " + list[i] + " Valor em estoque: R$" + _calc.ProductValue(list[i]).ToString("F2") + "|");
                 }
+                
             }
-            Console.ReadLine();
+            
         }//end ShowProducts();
 
         public void IncrementProduct()
@@ -72,19 +74,21 @@ namespace StockControl.Controller
             if (list.Count == 0)
             {
                 ShowProducts();
+                Console.ReadLine();
             }
             else
             {
+                ShowProducts();
                 Console.WriteLine();
                 Console.Write("Em qual produto cadastrado deseja dar entrada? Código: ");
                 cod = int.Parse(Console.ReadLine());
                 Console.Write($"Quantos(as) {list[cod - 1].Name.ToUpper()} deseja incrementar? Atual:{list[cod - 1].Quantity} | A incrementar: ");
                 quantity = int.Parse(Console.ReadLine());
-                Console.WriteLine("Valor de compra: R$");
+                Console.Write("Valor de compra: R$");
                 purchaseValue = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
 
-
                 list[cod - 1].Quantity += quantity;
+                list[cod - 1].Buy += quantity * purchaseValue;
                 Console.WriteLine("\nSucesso!");
                 Console.ReadLine();
             }
@@ -98,9 +102,11 @@ namespace StockControl.Controller
             if (list.Count == 0)
             {
                 ShowProducts();
+                
             }
             else
             {
+                ShowProducts();
                 Console.WriteLine();
                 Console.Write("Qual produto cadastrado deseja dar saída? Código: ");
                 cod = int.Parse(Console.ReadLine());
@@ -112,8 +118,9 @@ namespace StockControl.Controller
                 list[cod - 1].Sell += sell;
 
                 Console.WriteLine("\nSucesso!");
-                Console.ReadLine();
+                
             }
+            Console.ReadLine();
         }
 
         public void ViewProfit()
@@ -124,10 +131,10 @@ namespace StockControl.Controller
             {
                 profit = _calc.Profit(list[i]);
                 sum += profit;
-                Console.WriteLine(list[i].Name + " Lucro: R$" + profit);
+                Console.WriteLine(list[i].Name + " Lucro: R$" + profit.ToString("F2"),CultureInfo.InvariantCulture);
                 Console.WriteLine();
             }
-            Console.WriteLine("Lucro total: R$" + sum.ToString("F2"));
+            Console.WriteLine("Lucro total: R$" + sum.ToString("F2"),CultureInfo.InvariantCulture);
             Console.ReadLine();
         }
     }

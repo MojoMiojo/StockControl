@@ -45,6 +45,7 @@ namespace StockControl
                     case 2:
                         Console.WriteLine("-Lista de Produtos Cadastros-\n");
                         pc.ShowProducts();
+                        Console.ReadLine();
                         break;
                     case 3:
                         Console.WriteLine("-Entrada de Estoque-\n");
