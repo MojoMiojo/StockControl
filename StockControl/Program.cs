@@ -19,6 +19,10 @@ namespace StockControl
     class Program
     {
 
+        /*
+         * Method to advise
+         * the wrong input
+         */
         static void InvalidInput()
         {
             Console.WriteLine("\nEntrada inválida!");
@@ -30,8 +34,9 @@ namespace StockControl
         {
 
             int option = -1;
-            ProductController pc = new ProductController();
 
+            //Interface object
+            IProductController pc = new ProductController();
 
             while (option != 0)
             {

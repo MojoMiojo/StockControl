@@ -6,11 +6,11 @@ using StockControl.Services;
 
 namespace StockControl.Controller
 {
-    class ProductController
+    class ProductController : IProductController
     {
         //Objects
-        public List<Product> list = new List<Product>();
-        private Calc _calc = new Calc();
+        private List<Product> list = new List<Product>();
+        private ICalc calc = new Calc();
 
         //Constructor
         public ProductController()
@@ -113,7 +113,7 @@ namespace StockControl.Controller
             {   //Products in the list
                 for (int i = 0; i < list.Count; i++)
                 {
-                    Console.WriteLine("|Id: " + (i + 1) + " " + list[i] + " Valor em estoque: R$" + _calc.ProductValue(list[i]).ToString("F2") + "|");
+                    Console.WriteLine("| Id: " + (i + 1) + " " + list[i] + "\t| Valor em estoque: R$" + calc.ProductValue(list[i]).ToString("F2") + " |");
                 }//end for
             }//end else
         }//end ShowProducts();
@@ -256,7 +256,7 @@ namespace StockControl.Controller
             for (int i = 0; i < list.Count; i++)
             {
                 //profit receives the diference between the sales and buys
-                profit = _calc.Profit(list[i]);
+                profit = calc.Profit(list[i]);
                 //sum calculate the whole profit
                 sum += profit;
 

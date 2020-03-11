@@ -1,9 +1,8 @@
 ﻿using StockControl.Model;
-using System.Globalization;
 
 namespace StockControl.Services
 {
-    class Calc
+    class Calc : ICalc
     {
         //Constructor
         public Calc()

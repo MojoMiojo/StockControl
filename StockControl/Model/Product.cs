@@ -26,9 +26,9 @@ namespace StockControl.Model
 
         public override string ToString()
         {
-            return "|Nome:" + Name
-                + "| Quantidade: " + Quantity
-                + "| Valor Unitário: R$" + SalePrice.ToString("F2") + "|";
+            return "   | Nome:" + Name
+                + "\t| Quantidade: " + Quantity
+                + "\t| Valor Unitário: R$" + SalePrice.ToString("F2") + " |";
         }
 
     }//end class
