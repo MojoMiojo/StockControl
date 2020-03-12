@@ -9,12 +9,17 @@ namespace StockControl.Controller
     class ProductController : IProductController
     {
         //Objects
-        private List<Product> list = new List<Product>();
-        private ICalc calc = new Calc();
+        public List<Product> list = new List<Product>();
+        private ICalc calc;
+        ISQLInstructions instruction;
 
         //Constructor
-        public ProductController()
+
+        public ProductController() { }
+
+        public ProductController(SQLInstructions instructions)
         {
+            instructions.SelectDB(list);
         }
 
         /*
@@ -26,6 +31,7 @@ namespace StockControl.Controller
             double buy = 0, salePrice = 0, purchasePrice = 0;
             string name;
             int quantity;
+
             Product p;
 
             //Exceptions
@@ -84,9 +90,11 @@ namespace StockControl.Controller
 
                 //Instancing the object
                 p = new Product(name, quantity, purchasePrice, salePrice, buy);
+                instruction = new SQLInstructions();
+                instruction.InsertDB(p);
 
                 //Insert in the Products list
-                list.Add(p);
+                //list.Add(p);
                 Console.WriteLine("\nSucesso!");
                 Console.ReadLine();
 
@@ -96,6 +104,7 @@ namespace StockControl.Controller
                 Console.WriteLine("\nEntrada inválida, verifique e tente novamente.");
                 Console.ReadLine();
             }//end catch
+
         }//end NewProduct( )
 
         /*
@@ -104,17 +113,25 @@ namespace StockControl.Controller
          */
         public void ShowProducts()
         {
+
+            instruction = new SQLInstructions();
+            instruction.SelectDB(list);
+
             //If the list is null
             if (list.Count == 0)
             {
                 Console.WriteLine("Não há produtos cadastrados.");
             }
             else
-            {   //Products in the list
+            {
+                calc = new Calc();
+
+                //Products in the list
                 for (int i = 0; i < list.Count; i++)
                 {
-                    Console.WriteLine("| Id: " + (i + 1) + " " + list[i] + "\t| Valor em estoque: R$" + calc.ProductValue(list[i]).ToString("F2") + " |");
+                    Console.WriteLine(list[i] + "   | Valor em estoque: R$" + calc.ProductValue(list[i]).ToString("F2"));
                 }//end for
+
             }//end else
         }//end ShowProducts();
 
@@ -124,8 +141,9 @@ namespace StockControl.Controller
         */
         public void IncrementProduct()
         {
-            int cod, quantity = 0;
+            int ID, quantity = 0;
             double purchaseValue = -1;
+
 
             //Exceptions test
             try
@@ -133,7 +151,7 @@ namespace StockControl.Controller
                 //The list cannot be null
                 if (list.Count == 0)
                 {
-                    ShowProducts();
+                    Console.WriteLine("Não há produtos cadastrados!");
                     Console.ReadLine();
                 }// if don't so
                 else
@@ -143,12 +161,12 @@ namespace StockControl.Controller
 
                     //Read the ID of the product that will be added
                     Console.Write("Em qual produto cadastrado deseja dar entrada? Código: ");
-                    cod = int.Parse(Console.ReadLine());
+                    ID = int.Parse(Console.ReadLine());
 
                     //Quantity input
                     do
                     {
-                        Console.Write($"\nQuantos(as) {list[cod - 1].Name.ToUpper()} deseja dar entrada? Atual:{list[cod - 1].Quantity} | A entrar: ");
+                        Console.Write($"\nQuantos(as) {list[ID - 1].Name.ToUpper()} deseja dar entrada? Atual:{list[ID - 1].Quantity} | A entrar: ");
                         quantity = int.Parse(Console.ReadLine());
                         //Null quantity test
                         if (quantity <= 0)
@@ -169,10 +187,14 @@ namespace StockControl.Controller
                         }
                     } while (purchaseValue <= 0);
 
-                    //Adding the new quantity 
-                    list[cod - 1].Quantity += quantity;
                     //Calculating the new buys value
-                    list[cod - 1].Buy += quantity * purchaseValue;
+                    double newBuy = list[ID - 1].Buy + (quantity * purchaseValue);
+                    //Adding the new quantity 
+                    quantity += list[ID - 1].Quantity;
+
+                    //Updating the values
+                    instruction = new SQLInstructions();
+                    instruction.UpdateInsert(ID, quantity, newBuy);
 
                     Console.WriteLine("\nSucesso!");
                     Console.ReadLine();
@@ -191,15 +213,16 @@ namespace StockControl.Controller
          */
         public void RemoveProduct()
         {
-            int cod, quantity = 0;
-            
+            int ID, quantity = 0;
+
             //Exceptions test
             try
             {
                 //If the list be null 
                 if (list.Count == 0)
                 {
-                    ShowProducts();
+                    Console.WriteLine("Não há produtos cadastrados!");
+                    Console.ReadLine();
 
                 }
                 //If don't so
@@ -210,32 +233,35 @@ namespace StockControl.Controller
 
                     //Read the ID of the product that will be withdrew
                     Console.Write("Qual produto cadastrado deseja dar saída? Código: ");
-                    cod = int.Parse(Console.ReadLine());
+                    ID = int.Parse(Console.ReadLine());
 
                     //Loop to test the quantity and ID product to withdrawn
                     do
                     {
-                        Console.Write($"\nQuantos(as) {list[cod - 1].Name.ToUpper()} deseja dar baixa? Atual:{list[cod - 1].Quantity} | Baixa: ");
+                        Console.Write($"\nQuantos(as) {list[ID - 1].Name.ToUpper()} deseja dar baixa? Atual:{list[ID - 1].Quantity} | Baixa: ");
                         quantity = int.Parse(Console.ReadLine());
                         if (quantity <= 0)
                         {
                             Console.WriteLine("\nO valor de baixa não pode pode ser nulo, negativo ou fracionário.");
                         }
-                        else if (quantity > list[cod - 1].Quantity)
+                        else if (quantity > list[ID - 1].Quantity)
                         {
                             Console.WriteLine("\nQuantidade indisponível para baixa.");
                         }
-                    } while (quantity <= 0 || quantity > list[cod - 1].Quantity);
+                    } while (quantity <= 0 || quantity > list[ID - 1].Quantity);
 
-                    //Updating the withdraw
-                    list[cod - 1].Quantity -= quantity;
-                    //Updating the value of the new sales in the object
-                    list[cod - 1].Sell += (list[cod - 1].SalePrice) * quantity;
+                    //Calculating the new buys value
+                    double newSell = list[ID - 1].Sell += (list[ID - 1].SalePrice) * quantity;
+                    //Adding the new quantity 
+                    quantity = list[ID - 1].Quantity - quantity;
+
+                    //Updating the values
+                    instruction = new SQLInstructions();
+                    instruction.UpdateInsert(ID, quantity, newSell);
 
                     Console.WriteLine("\nSucesso!");
-
+                    Console.ReadLine();
                 }//end else
-                Console.ReadLine();
             }//end try
             catch (ArgumentOutOfRangeException)
             {
@@ -251,7 +277,7 @@ namespace StockControl.Controller
         public void ViewProfit()
         {
             double sum = 0, profit = 0;
-
+            calc = new Calc();
             //List loop
             for (int i = 0; i < list.Count; i++)
             {
@@ -266,5 +292,16 @@ namespace StockControl.Controller
             Console.WriteLine("Lucro total: R$" + sum.ToString("F2"), CultureInfo.InvariantCulture);
             Console.ReadLine();
         }//end ViewProfit( )
+
+        public string toScreen(string str, int space)
+        {
+            string newString = str;
+
+            for (int i = 0; i < space - str.Length; i++)
+            {
+                newString += " ";
+            }
+            return newString;
+        }
     }//end ProductController
 }//end namespace

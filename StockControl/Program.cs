@@ -35,8 +35,8 @@ namespace StockControl
 
             int option = -1;
 
-            //Interface object
-            IProductController pc = new ProductController();
+            //Interface object and DataBase initializer
+            IProductController pc = new ProductController(new SQLInstructions());
 
             while (option != 0)
             {
@@ -44,9 +44,12 @@ namespace StockControl
                 {
                     Console.WriteLine("-Controle de Estoque-\n");
 
-                    Console.WriteLine("1 - Cadastrar Produto\t2 - Mostrar produtos cadastrados\n"
-                                 + "3 - Entrada de produtos\t4 - Saída de produtos\n"
-                                 + "5 - Visão de Lucros\t0 - Sair\n");
+                    Console.WriteLine("1 - Cadastrar Produto\n" +
+                                      "2 - Mostrar produtos cadastrados\n"
+                                    + "3 - Entrada de produtos\n" +
+                                      "4 - Saída de produtos\n"
+                                    + "5 - Visão de Lucros\n" +
+                                      "0 - Sair\n");
 
 
                     Console.Write("Escolha a opção desejada: ");
@@ -81,9 +84,12 @@ namespace StockControl
                             break;
                         default:
                             Console.WriteLine("-Controle de Estoque-\n");
-                            Console.WriteLine("1 - Cadastrar Produto\t2 - Mostrar produtos cadastrados\n"
-                                 + "3 - Entrada de produtos\t4 - Saída de produtos\n"
-                                 + "5 - Visão de Lucros\t0 - Sair\n");
+                            Console.WriteLine("1 - Cadastrar Produto\n" +
+                                              "2 - Mostrar produtos cadastrados\n"
+                                            + "3 - Entrada de produtos\n" +
+                                              "4 - Saída de produtos\n"
+                                            + "5 - Visão de Lucros\n" +
+                                              "0 - Sair\n");
                             Console.Write("Escolha a opção desejada: ");
                             InvalidInput();
                             break;

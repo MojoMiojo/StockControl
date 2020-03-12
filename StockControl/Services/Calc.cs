@@ -24,7 +24,7 @@ namespace StockControl.Services
          */
         public double Profit(Product P)
         {
-            System.Console.WriteLine("Vendas: R$" +P.Sell.ToString("F2")+"+ <> Compras: R$"+P.Buy.ToString("F2")+"-");
+            System.Console.WriteLine("Vendas: R$" + P.Sell.ToString("F2") + "+ <> Compras: R$" + P.Buy.ToString("F2") + "-");
             return P.Sell - P.Buy;
         }//end Profit()
     }//end Calc
